@@ -1,8 +1,3 @@
-"""
-Multi-Format Document Loader for Streamlit App Integration
-Handles loading various document types including PDFs, Word docs, Excel files, and text files
-"""
-
 import tempfile
 import os
 from typing import List
@@ -15,28 +10,15 @@ from multimodal_loader import MultiFormatDocumentLoader as BaseMultiFormatLoader
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class StreamlitMultiFormatDocumentLoader:
-    """Multi-format document loader with Streamlit integration"""
     
     def __init__(self):
-        """Initialize with the base multi-format loader"""
         self.base_loader = BaseMultiFormatLoader()
     
     def load_document(self, file_path: str) -> List[Document]:
-        """Load a document from file path using the multi-format loader"""
         return self.base_loader.load_document(file_path)
     
     def load_uploaded_file(self, uploaded_file) -> List[Document]:
-        """
-        Loads a document from a Streamlit uploaded file
-        
-        Args:
-            uploaded_file: Streamlit uploaded file object
-            
-        Returns:
-            List[Document]: Document chunks from the uploaded file
-        """
         file_extension = uploaded_file.name.split('.')[-1].lower()
         
         if not self.base_loader.is_supported_format(f"dummy.{file_extension}"):
@@ -76,15 +58,6 @@ class StreamlitMultiFormatDocumentLoader:
                 logger.warning(f"Could not delete temporary file: {tmp_file_path}")
     
     def load_multiple_uploaded_files(self, uploaded_files) -> List[Document]:
-        """
-        Loads multiple documents from Streamlit uploaded files
-        
-        Args:
-            uploaded_files: List of Streamlit uploaded file objects
-            
-        Returns:
-            List[Document]: Combined document chunks from all files
-        """
         all_documents = []
         failed_files = []
         
@@ -104,28 +77,16 @@ class StreamlitMultiFormatDocumentLoader:
         return all_documents
     
     def get_supported_extensions(self) -> List[str]:
-        """Returns a list of supported file extensions"""
         return self.base_loader.get_supported_extensions()
     
     def get_supported_extensions_display(self) -> str:
-        """Returns a formatted string of supported extensions for display"""
         extensions = self.get_supported_extensions()
         return ", ".join([f".{ext}" for ext in sorted(extensions)])
     
     def is_supported_file(self, filename: str) -> bool:
-        """Checks if a filename has a supported extension"""
         return self.base_loader.is_supported_format(filename)
     
     def get_upload_info(self, uploaded_file) -> dict:
-        """
-        Gets information about an uploaded file
-        
-        Args:
-            uploaded_file: Streamlit uploaded file object
-            
-        Returns:
-            dict: File information including name, size, and type
-        """
         file_extension = uploaded_file.name.split('.')[-1].lower()
         
         return {
@@ -138,29 +99,11 @@ class StreamlitMultiFormatDocumentLoader:
 
 
 def load_document(file_path: str) -> List[Document]:
-    """
-    Loads a single document from a file path
-    
-    Args:
-        file_path: Path to the document file
-        
-    Returns:
-        List[Document]: Document chunks from the file
-    """
     loader = StreamlitMultiFormatDocumentLoader()
     return loader.load_document(file_path)
 
 
 def load_uploaded_file(uploaded_file) -> List[Document]:
-    """
-    Loads a document from a Streamlit uploaded file
-    
-    Args:
-        uploaded_file: Streamlit uploaded file object
-        
-    Returns:
-        List[Document]: Document chunks from the uploaded file
-    """
     loader = StreamlitMultiFormatDocumentLoader()
     return loader.load_uploaded_file(uploaded_file)
 

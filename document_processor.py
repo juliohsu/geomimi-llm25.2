@@ -1,6 +1,3 @@
-"""
-Document processing module for the Advanced RAG application
-"""
 import streamlit as st
 import time
 from langchain.text_splitter import CharacterTextSplitter
@@ -11,23 +8,16 @@ from config import CHUNK_SIZE, CHUNK_OVERLAP, CHROMA_COLLECTION_NAME, CHROMA_PER
 from utils import get_file_key
 from ui_components import render_file_analysis
 
-
 class DocumentProcessor:
-    """Processes documents and creates embeddings for the vector database"""
     
     def __init__(self, document_loader):
         self.document_loader = document_loader
         self.embedding_function = OpenAIEmbeddings()
     
     def process_local_file(self, file_path):
-        """
-        Processes a local file and creates embeddings
-        Returns retriever or None if processing fails
-        """
         if not file_path:
             return None
         
-        # Check if file already processed
         current_file_key = f"local_{file_path}"
         if st.session_state.get('processed_file') == current_file_key:
             return st.session_state.get('retriever')
@@ -40,53 +30,42 @@ class DocumentProcessor:
             return None
     
     def _process_local_file_pipeline(self, file_path, current_file_key):
-        """Runs the complete processing pipeline for local files"""
         st.markdown("### 🔄 Processing Status")
         
-        # Initialize progress tracking
         progress_bar = st.progress(0)
         status_text = st.empty()
         
         try:
-            # Etapa 1: Carregar documento
             status_text.text("🔄 Carregando documento local...")
             progress_bar.progress(25)
             documents = self.document_loader.load_document(file_path)
 
-            # Etapa 2: Extrair conteúdo
             status_text.text("🔍 Extraindo conteúdo...")
             progress_bar.progress(50)
             st.success(f"✅ Conteúdo extraído com sucesso de {file_path}")
 
-            # Etapa 3: Dividir em partes
             progress_bar.progress(75)
             status_text.text("✂️ Dividindo em partes...")
             doc_splits = self._create_document_chunks(documents)
 
-            # Etapa 4: Criar embeddings
             progress_bar.progress(90)
             status_text.text("🧠 Criando embeddings...")
             chroma_db = self._create_vector_database(doc_splits)
 
-            # Etapa 5: Concluído
             progress_bar.progress(100)
             status_text.text("✅ Processamento concluído!")
             
-            # Clean up UI
             time.sleep(1)
             progress_bar.empty()
             status_text.empty()
             
-            # Store in session state
             retriever = chroma_db.as_retriever()
             st.session_state.processed_file = current_file_key
             st.session_state.retriever = retriever
             
-            # Debug: Confirm retriever creation and test it
             print(f"Local file retriever created successfully: {retriever is not None}")
             print(f"Session state updated with file key: {current_file_key}")
             
-            # Test the retriever with a simple query
             try:
                 test_docs = retriever.invoke("test")
                 print(f"Local file retriever test successful - {len(test_docs)} documents found")
@@ -101,14 +80,9 @@ class DocumentProcessor:
             raise e
     
     def process_file(self, user_file):
-        """
-        Processes an uploaded file and creates embeddings
-        Returns retriever or None if processing fails
-        """
         if user_file is None:
             return None
         
-        # Check if file already processed
         current_file_key = get_file_key(user_file)
         if st.session_state.get('processed_file') == current_file_key:
             return st.session_state.get('retriever')
@@ -121,69 +95,53 @@ class DocumentProcessor:
             return None
     
     def _process_new_file(self, user_file, current_file_key):
-        """Processes a new file that hasn't been processed before"""
-        # Get file info and display analysis
         file_info = self.document_loader.get_upload_info(user_file)
         render_file_analysis(file_info)
         
-        # Check if file type is supported
         if not file_info['is_supported']:
             st.error(f"❌ Unsupported file type: .{file_info['extension']}")
             st.info(f"📋 Supported formats: {self.document_loader.get_supported_extensions_display()}")
             return None
         
-        # Process the file
         return self._execute_processing_pipeline(user_file, file_info, current_file_key)
     
     def _execute_processing_pipeline(self, user_file, file_info, current_file_key):
-        """Runs the complete processing pipeline"""
         st.markdown("### 🔄 Processing Status")
         
-        # Initialize progress tracking
         progress_bar = st.progress(0)
         status_text = st.empty()
         
         try:
-            # Etapa 1: Carregar documento
             status_text.text("🔄 Carregando documento...")
             progress_bar.progress(25)
             documents = self.document_loader.load_uploaded_file(user_file)
 
-            # Etapa 2: Extrair conteúdo
             status_text.text("🔍 Extraindo conteúdo...")
             progress_bar.progress(50)
             st.success(f"✅ Conteúdo extraído com sucesso de {file_info['filename']}")
 
-            # Etapa 3: Dividir em partes
             progress_bar.progress(75)
             status_text.text("✂️ Dividindo em partes...")
             doc_splits = self._create_document_chunks(documents)
 
-            # Etapa 4: Criar embeddings
             progress_bar.progress(90)
             status_text.text("🧠 Criando embeddings...")
             chroma_db = self._create_vector_database(doc_splits)
 
-            # Etapa 5: Concluído
             progress_bar.progress(100)
             status_text.text("✅ Processamento concluído!")
             
-            # Clean up UI
             time.sleep(1)
             progress_bar.empty()
             status_text.empty()
             
-            # Store in session state
             retriever = chroma_db.as_retriever()
             st.session_state.processed_file = current_file_key
             st.session_state.retriever = retriever
             
-            # Debug: Confirm retriever creation and test it
-            # Debug: Confirmar criação do retriever e testá-lo
             print(f"Retriever criado com sucesso: {retriever is not None}")
             print(f"Session state atualizado com a chave do arquivo: {current_file_key}")
             
-            # Test the retriever with a simple query
             try:
                 test_docs = retriever.invoke("test")
                 print(f"Teste do retriever bem-sucedido - {len(test_docs)} documentos encontrados")
@@ -198,7 +156,6 @@ class DocumentProcessor:
             raise e
     
     def _create_document_chunks(self, documents):
-        """Splits documents into smaller chunks"""
         document_texts = [doc.page_content for doc in documents]
         
         splitter = CharacterTextSplitter.from_tiktoken_encoder(
@@ -207,7 +164,6 @@ class DocumentProcessor:
         )
         doc_splits = splitter.create_documents(document_texts)
         
-        # Add metadata
         for i, split in enumerate(doc_splits):
             original_doc_index = min(i, len(documents) - 1)
             split.metadata.update(documents[original_doc_index].metadata)
@@ -220,7 +176,6 @@ class DocumentProcessor:
         return doc_splits
     
     def _create_vector_database(self, doc_splits):
-        """Creates a ChromaDB vector database from document chunks"""
         return Chroma.from_documents(
             documents=doc_splits, 
             collection_name=CHROMA_COLLECTION_NAME, 
