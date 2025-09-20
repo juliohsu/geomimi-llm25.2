@@ -23,14 +23,6 @@ load_dotenv()
 llm = ChatOpenAI(temperature=0)
 
 class EvaluateDocs(BaseModel):
-    """
-    Document evaluation results for LangGraph RAG workflows
-    
-    This model structures the evaluation results when assessing whether
-    retrieved documents are sufficient for answering a question. Used
-    throughout the LangGraph RAG workflow for routing decisions.
-    """
-    
     score: str = Field(
         description="Whether documents are relevant to the question - 'yes' if sufficient, 'no' if insufficient"
     )

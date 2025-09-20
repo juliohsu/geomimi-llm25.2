@@ -11,8 +11,6 @@ llm = ChatOpenAI(temperature=0)
 
 
 class DocumentRelevance(BaseModel):
-    """Model for document relevance evaluation results"""
-    
     binary_score: bool = Field(
         description="Whether the answer is grounded in the documents - true if supported, false if not supported"
     )

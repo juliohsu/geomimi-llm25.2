@@ -8,8 +8,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class QuestionRelevance(BaseModel):
-    """Model for question-answer relevance evaluation results"""
-    
     binary_score: bool = Field(
         description="Whether the answer adequately addresses the question - true if relevant, false if not relevant"
     )
