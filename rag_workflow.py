@@ -1,3 +1,5 @@
+import streamlit as st
+
 from langgraph.graph import END, StateGraph
 from state import GraphState
 
@@ -7,7 +9,6 @@ class RAGWorkflow:
         self.graph = None
         self.retriever = None
         self._current_session_retriever_key = None
-
 
     def _create_graph(self):
         workflow = StateGraph(GraphState)
@@ -39,3 +40,29 @@ class RAGWorkflow:
         workflow.add_edge("Generate Answer", END)
 
         return workflow.compile()
+    
+    def set_retriever(self, retriever):
+        self.retriever = retriever
+        
+        if retriever is not None:
+            current_file_key = st.session_state.get('processed_file')
+            self._current_session_retriever_key = current_file_key
+            print(f"Retriever set for file: {current_file_key}")
+        else:
+            self._current_session_retriever_key = None
+            print("Retriever cleared")
+
+    def get_current_retriever(self):
+        if self.retriever is not None:
+            return self.retriever
+            
+        session_retriever = st.session_state.get('retriever')
+        if session_retriever is not None:
+            print("Using retriever from session state")
+            self.retriever = session_retriever
+            return session_retriever
+            
+        return None
+    
+    
+    
