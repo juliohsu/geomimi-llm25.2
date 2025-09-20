@@ -4,6 +4,8 @@ from langgraph.graph import END, StateGraph
 from state import GraphState
 from chains.evaluate import evaluate_docs
 from chains.generate_answer import generate_chain
+from chains.question_relevance import question_relevance
+from chains.document_relevance import document_relevance
 
 class RAGWorkflow:
     
@@ -11,6 +13,11 @@ class RAGWorkflow:
         self.graph = None
         self.retriever = None
         self._current_session_retriever_key = None
+
+    def get_graph(self):
+        if 'graph_instance' not in st.session_state or st.session_state.graph_instance is None:
+            st.session_state.graph_instance = self._create_graph()
+        return st.session_state.graph_instance
 
     def _create_graph(self):
         workflow = StateGraph(GraphState)
@@ -184,3 +191,56 @@ Você poderia reformular sua pergunta de forma mais específica sobre o conteúd
         
         return fallback_message
     
+    def process_question(self, question):
+        print(f"STARTING RAG WORKFLOW for question: '{question}'")
+        
+        current_retriever = self.get_current_retriever()
+        self.set_retriever(current_retriever)
+        
+        graph = self.get_graph()
+        result = graph.invoke(input={"question": question})
+        
+        print(f"RAG WORKFLOW COMPLETED")
+        return result
+    
+    def _check_hallucinations(self, state: GraphState):
+        print("GRAPH STATE: Check Hallucinations")
+        question = state["question"]
+        documents = state["documents"]
+        solution = state["solution"]
+        retry_count = state.get("retry_count", 0)
+        no_documents_available = state.get("no_documents_available", False)
+
+        if no_documents_available or len(documents) == 0:
+            print("No documents available - skipping hallucination check and ending workflow")
+            return "Question not addressed"
+        
+        MAX_RETRIES = 3
+        if retry_count >= MAX_RETRIES:
+            print(f"Maximum retries ({MAX_RETRIES}) reached - ending workflow to prevent infinite loop")
+            state["retry_limit_reached"] = True
+            return "Question not addressed"
+
+        print("Checking document relevance...")
+        doc_relevance_score = document_relevance.invoke(
+            {"documents": documents, "solution": solution}
+        )
+
+        if doc_relevance_score.binary_score:
+            print("Document relevance check passed")
+            print("Checking question relevance...")
+            question_relevance_score = question_relevance.invoke({"question": question, "solution": solution})
+            
+            state["document_relevance_score"] = doc_relevance_score
+            state["question_relevance_score"] = question_relevance_score
+            
+            if question_relevance_score.binary_score:
+                print("ROUTING DECISION: Going to 'END' (Answers Question)")
+                return "Answers Question"
+            else:
+                print("ROUTING DECISION: Going to 'END' (Question not addressed)")
+                return "Question not addressed"
+        else:
+            print(f"ROUTING DECISION: Going to 'Generate Answer' (Hallucinations detected, retry {retry_count + 1})")
+            state["document_relevance_score"] = doc_relevance_score
+            return "Hallucinations detected"
