@@ -12,7 +12,6 @@ import logging
 from langchain_core.documents import Document
 from multimodal_loader import MultiFormatDocumentLoader as BaseMultiFormatLoader
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -38,14 +37,11 @@ class StreamlitMultiFormatDocumentLoader:
         Returns:
             List[Document]: Document chunks from the uploaded file
         """
-        # Get file extension
         file_extension = uploaded_file.name.split('.')[-1].lower()
         
-        # Check if file type is supported
         if not self.base_loader.is_supported_format(f"dummy.{file_extension}"):
             raise ValueError(f"Unsupported file type: {file_extension}")
         
-        # Create temporary file to work with loaders that need file paths
         with tempfile.NamedTemporaryFile(
             delete=False, 
             suffix=f".{file_extension}",
@@ -57,10 +53,8 @@ class StreamlitMultiFormatDocumentLoader:
         try:
             logger.info(f"Processing uploaded file: {uploaded_file.name} (size: {len(uploaded_file.getvalue())} bytes)")
             
-            # Load document using the loader
             documents = self.base_loader.load_document(tmp_file_path)
             
-            # Update metadata with original filename and upload info
             for doc in documents:
                 doc.metadata.update({
                     "original_filename": uploaded_file.name,
@@ -76,7 +70,6 @@ class StreamlitMultiFormatDocumentLoader:
             logger.error(f"Error processing uploaded file {uploaded_file.name}: {str(e)}")
             raise Exception(f"Failed to process uploaded file {uploaded_file.name}: {str(e)}")
         finally:
-            # Clean up temporary file
             try:
                 os.unlink(tmp_file_path)
             except OSError:
@@ -144,7 +137,6 @@ class StreamlitMultiFormatDocumentLoader:
         }
 
 
-# Convenience functions for backward compatibility
 def load_document(file_path: str) -> List[Document]:
     """
     Loads a single document from a file path
@@ -173,5 +165,4 @@ def load_uploaded_file(uploaded_file) -> List[Document]:
     return loader.load_uploaded_file(uploaded_file)
 
 
-# Create default loader instance for easy import
 MultiModalDocumentLoader = StreamlitMultiFormatDocumentLoader
