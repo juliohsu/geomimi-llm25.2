@@ -2,6 +2,7 @@ import streamlit as st
 
 from langgraph.graph import END, StateGraph
 from state import GraphState
+from chains.evaluate import evaluate_docs
 from chains.generate_answer import generate_chain
 
 class RAGWorkflow:
@@ -41,6 +42,39 @@ class RAGWorkflow:
         workflow.add_edge("Generate Answer", END)
 
         return workflow.compile()
+    
+    def _evaluate(self, state: GraphState):
+        print("GRAPH STATE: Grade Documents")
+        question = state["question"]
+        documents = state["documents"]
+
+        online_search = state.get("online_search", False)
+        print(f"Evaluating {len(documents)} documents, online_search: {online_search}")
+        
+        filtered_docs = []
+        document_evaluations = []
+        
+        for document in documents:
+            response = evaluate_docs.invoke({"question": question, "document": document.page_content})
+            document_evaluations.append(response)
+            
+            result = response.score
+            if result.lower() == "yes":
+                filtered_docs.append(document)
+            else:
+                online_search = True
+        
+        print(f"Filtered to {len(filtered_docs)} relevant documents, online_search: {online_search}")
+        
+        search_method = "online" if online_search else "documents" 
+        
+        return {
+            "documents": filtered_docs, 
+            "question": question, 
+            "online_search": online_search,
+            "search_method": search_method,
+            "document_evaluations": document_evaluations
+        }
     
     def set_retriever(self, retriever):
         self.retriever = retriever
