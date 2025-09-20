@@ -1,6 +1,7 @@
 import streamlit as st
 
 from langgraph.graph import END, StateGraph
+from langchain_core.documents import Document
 from state import GraphState
 from chains.evaluate import evaluate_docs
 from chains.generate_answer import generate_chain
