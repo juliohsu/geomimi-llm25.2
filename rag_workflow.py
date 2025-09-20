@@ -2,6 +2,7 @@ import streamlit as st
 
 from langgraph.graph import END, StateGraph
 from state import GraphState
+from chains.generate_answer import generate_chain
 
 class RAGWorkflow:
     
@@ -64,5 +65,49 @@ class RAGWorkflow:
             
         return None
     
+    def _any_doc_irrelevant(self, state):
+        next_state = "Generate Answer"
+        return next_state
     
+    def _generate_answer(self, state: GraphState):
+        print("GRAPH STATE: Generate Answer")
+        question = state["question"]
+        documents = state["documents"]
+        
+        retry_count = state.get("retry_count", 0)
+        
+        print(f"Generating answer using {len(documents)} documents (attempt {retry_count + 1})")
+        
+        if len(documents) == 0:
+            print("No relevant documents found - providing fallback response")
+            solution = self._generate_fallback_response(question)
+            return {
+                "documents": documents, 
+                "question": question, 
+                "solution": solution,
+                "retry_count": retry_count + 1,
+                "no_documents_available": True
+            }
+        
+        solution = generate_chain.invoke({"context": documents, "question": question})
+        print(f"Answer generated: {len(solution)} characters")
+        return {
+            "documents": documents, 
+            "question": question, 
+            "solution": solution,
+            "retry_count": retry_count + 1
+        }
+    
+    def _generate_fallback_response(self, question):
+        fallback_message = f"""Desculpe, mas não consegui encontrar informações relevantes nos documentos carregados para responder à sua pergunta: "{question}".
+
+Os documentos disponíveis parecem não conter informações relacionadas ao que você está perguntando. Para obter uma resposta adequada, seria necessário:
+
+1. Carregar documentos que contenham informações relacionadas à sua pergunta
+2. Fazer uma pergunta mais específica sobre o conteúdo dos documentos carregados
+3. Verificar se sua pergunta está relacionada ao contexto dos documentos disponíveis
+
+Você poderia reformular sua pergunta de forma mais específica sobre o conteúdo dos documentos, ou carregar documentos relevantes para sua consulta?"""
+        
+        return fallback_message
     
