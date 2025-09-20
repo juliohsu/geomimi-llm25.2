@@ -43,6 +43,45 @@ class RAGWorkflow:
 
         return workflow.compile()
     
+    def _retrieve(self, state: GraphState):
+        print("GRAPH STATE: Retrieve Documents")
+        question = state["question"]
+        
+        retry_count = 0
+        
+        current_retriever = self.get_current_retriever()
+        
+        print(f"Current retriever status: {current_retriever is not None}")
+        
+        if current_retriever is None:
+            print("No retriever available - going to online search")
+            return {
+                "documents": [], 
+                "question": question, 
+                "online_search": True,
+                "retry_count": retry_count
+            }
+        
+        try:
+            documents = current_retriever.invoke(question)
+            print(f"Retrieved {len(documents)} documents from ChromaDB")
+            return {
+                "documents": documents, 
+                "question": question,
+                "retry_count": retry_count
+            }
+        except Exception as e:
+            print(f"Error retrieving documents: {e}")
+            print("Clearing invalid retriever and falling back to online search")
+            self.retriever = None
+            st.session_state.retriever = None
+            return {
+                "documents": [], 
+                "question": question, 
+                "online_search": True,
+                "retry_count": retry_count
+            }
+    
     def _evaluate(self, state: GraphState):
         print("GRAPH STATE: Grade Documents")
         question = state["question"]
