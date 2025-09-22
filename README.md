@@ -1,5 +1,5 @@
 
-# 🌎 Geomimi – An Intelligent Assistent of Hydrological Calculus Assistant (Open Source)
+# 🌎 Geomimi – An Intelligent Assistent of Advanced Geography Hydrological Calculus
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -9,13 +9,15 @@
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-0.5.23-purple.svg)](https://www.trychroma.com/)
 [![Code style: Python](https://img.shields.io/badge/Code%20Style-Python-black.svg)](https://www.python.org/dev/peps/pep-0008/)
 
-This is a brazilian web application founded by "Julio Hsu" and its collaborators that allows you to ask questions about Brazil Geography and related content. It is built with LangGraph, Streamlit, and ChromaDB. If your document does not contain the answer, it automatically searches online to help you out.
+This is a BRAZILIAN - OPEN SOURCE of web application founded by "Julio Hsu" and its collaborators that allows you to ask questions about Brazil Geography and related content. It is built with LangGraph, Streamlit, and ChromaDB. If your document does not contain the answer, it automatically searches online to help you out.
 
 This project demonstrates how to build a RAG (Retrieval-Augmented Generation) system using LangGraph for workflow management. LangGraph helps orchestrate the different steps in the RAG pipeline, from document processing to answer generation, with built-in error handling and state management.
 
 If you're looking to understand how LangGraph works with RAG systems, this implementation shows practical patterns for building document question-answering applications with proper workflow orchestration.
 
 ## How It Works
+
+*Demo Video Link of our app: https://www.loom.com/share/75cde0cc4820449bbf9580479d4fa1fb*
 
 Here is what happens when you use this application and the process is actually quite straightforward:
 
