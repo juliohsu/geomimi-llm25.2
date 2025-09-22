@@ -85,3 +85,8 @@ Sistema de avaliação usando **RAGAS** e **GISKARD** para o sistema RAG especia
 ## Insights e Recomendações Gerais
 
 * **Saúde Geral do Sistema**: Bom (0.707)
+* **Relatório e Avaliação Final**: 
+
+Com esse score podemos entender que assistente Geomimi pode ser classificado como um sistema inteligente, altamente sofisticado e eficiente, capaz de ingerir documentos complexos, como o PDF de Balanço Hídrico Climatológico (BHC), extraindo todo o conhecimento relevante de forma precisa. Ele fornece informações detalhadas do BHC, permitindo monitorar com exatidão a disponibilidade de água em um determinado local. 
+
+Por final, todas as perguntas que não estão diretamente relacionadas ao BHC são tratadas de forma sutil e contextual, garantindo respostas coerentes sem perder o foco principal do sistema.
