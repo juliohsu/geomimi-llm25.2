@@ -18,9 +18,21 @@ def setup_page_config():
 def render_header():
     st.title(f"{PAGE_ICON} Geomimi - IA Geografo")
     st.subheader("Assistente Inteligente Especializada em Geografia")
-
+    
+    st.markdown("### **Arquitetura dos Agentes**")
+    image_path = "screenshots/graph.png"
+    if os.path.exists(image_path):
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.image(image_path, caption="Diagrama da Arquitetura Multi-Agente", use_container_width=True)
+    else:
+        st.info(" **Visualização da Arquitetura**: Diagrama do fluxo de agentes especializados e suas interações no sistema RAG")
+    
+    st.markdown("---")
+    st.markdown("### **Funcionalidade Principais do Sistema**")
+    
+    # Destaques de funcionalidades
     col1, col2, col3 = st.columns(3)
-
     with col1:
         st.info("🧠 **Sistema Multi-Agente**\n\nSupervisor orchestral com agentes especializados: Retriever (busca densa + rerank), Answerer (citações obrigatórias), Self-check (validação de evidências)")
     with col2:
