@@ -20,14 +20,14 @@ def render_header():
     st.subheader("Assistente Inteligente Especializada em Geografia")
 
     col1, col2, col3 = st.columns(3)
-    with col1:
-        st.info("🔍 **Busca Inteligente**\n\nRecuperação avançada com busca embedding automática")
-    with col2:
-        st.info("📄 **Multi-Formato**\n\nSuporte a PDF, Word, Excel, arquivos de código")
-    with col3:
-        st.info("🤖 **IA Avançada**\n\nWorkflow LangGraph com detecção smells de alucinação")
-    st.divider()
 
+    with col1:
+        st.info("🧠 **Sistema Multi-Agente**\n\nSupervisor orchestral com agentes especializados: Retriever (busca densa + rerank), Answerer (citações obrigatórias), Self-check (validação de evidências)")
+    with col2:
+        st.info("📄 **Processamento Inteligente**\n\nChunking avançado, embedding semântico e suporte multi-formato (PDF, Word, Excel, código)")
+    with col3:
+        st.info("🛡️ **IA Responsável**\n\nSelf-RAG com auto-verificação, Safety Agent para disclaimers médicos/legais e prevenção de aconselhamento perigoso")
+    st.divider()
 
 def render_sidebar():
     with st.sidebar:
