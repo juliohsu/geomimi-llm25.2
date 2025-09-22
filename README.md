@@ -1,5 +1,4 @@
-
-# 🌎 Geomimi – An Intelligent Assistent of Advanced Geography Hydrological Calculus
+# 🌎 Geomimi – Assistente Inteligente de Cálculos Hidrológicos Avançados de Geografia
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -9,200 +8,209 @@
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-0.5.23-purple.svg)](https://www.trychroma.com/)
 [![Code style: Python](https://img.shields.io/badge/Code%20Style-Python-black.svg)](https://www.python.org/dev/peps/pep-0008/)
 
-This is a BRAZILIAN - OPEN SOURCE of web application founded by "Julio Hsu" and its collaborators that allows you to ask questions about Brazil Geography and related content. It is built with LangGraph, Streamlit, and ChromaDB. If your document does not contain the answer, it automatically searches online to help you out.
+Esta é uma aplicação web BRASILEIRA - CÓDIGO ABERTO fundada por "Julio Hsu" e seus colaboradores que permite fazer perguntas sobre Geografia do Brasil e conteúdo relacionado. É construída com LangGraph, Streamlit e ChromaDB. Se seu documento não contém a resposta, busca automaticamente online para ajudá-lo.
 
-This project demonstrates how to build a RAG (Retrieval-Augmented Generation) system using LangGraph for workflow management. LangGraph helps orchestrate the different steps in the RAG pipeline, from document processing to answer generation, with built-in error handling and state management.
+Este projeto demonstra como construir um sistema RAG (Retrieval-Augmented Generation) usando LangGraph para gerenciamento de fluxo de trabalho. O LangGraph ajuda a orquestrar as diferentes etapas do pipeline RAG, desde o processamento de documentos até a geração de respostas, com tratamento de erros integrado e gerenciamento de estado.
 
-If you're looking to understand how LangGraph works with RAG systems, this implementation shows practical patterns for building document question-answering applications with proper workflow orchestration.
+Se você quer entender como o LangGraph funciona com sistemas RAG, esta implementação mostra padrões práticos para construir aplicações de perguntas e respostas sobre documentos com orquestração adequada de fluxo de trabalho.
 
-## How It Works
+## Como Funciona
 
-*Demo Video Link of our app: https://www.loom.com/share/75cde0cc4820449bbf9580479d4fa1fb*
+_Link do Vídeo Demo do nosso app: https://www.loom.com/share/75cde0cc4820449bbf9580479d4fa1fb_
 
-Here is what happens when you use this application and the process is actually quite straightforward:
+Aqui está o que acontece quando você usa esta aplicação e o processo é realmente bem direto:
 
 ![Workflow](screenshots/graph.png)
 
-*This diagram shows how everything works together behind the scenes.*
+_Este diagrama mostra como tudo funciona junto nos bastidores._
 
 ---
 
-## LangGraph RAG Implementation
+## Implementação LangGraph RAG
 
-This project shows how to implement RAG with LangGraph in a practical way. LangGraph handles the workflow orchestration, managing the different steps like document retrieval, relevance checking, and answer generation.
+Este projeto mostra como implementar RAG com LangGraph de forma prática. O LangGraph lida com a orquestração do fluxo de trabalho, gerenciando as diferentes etapas como recuperação de documentos, verificação de relevância e geração de respostas.
 
-### Why LangGraph for RAG?
-- **State Management**: LangGraph manages the application state as it moves through different processing steps
-- **Conditional Logic**: The workflow can decide whether to search documents or go online based on what it finds
-- **Error Handling**: Built-in mechanisms to handle failures and try alternative approaches
-- **Extensibility**: Easy to add new steps or modify the workflow as needed
+### Por que LangGraph para RAG?
 
-### Key LangGraph RAG Patterns Used:
-- Document evaluation before answer generation
-- Conditional routing between different search methods
-- Multi-step validation and quality checks
-- State transitions with proper error recovery
+- **Gerenciamento de Estado**: LangGraph gerencia o estado da aplicação conforme ela passa por diferentes etapas de processamento
+- **Lógica Condicional**: O fluxo de trabalho pode decidir se deve buscar documentos ou ir online baseado no que encontra
+- **Tratamento de Erros**: Mecanismos integrados para lidar com falhas e tentar abordagens alternativas
+- **Extensibilidade**: Fácil de adicionar novas etapas ou modificar o fluxo de trabalho conforme necessário
 
-If you want to learn LangGraph RAG implementation, this codebase provides a complete working example with real-world patterns.
+### Principais Padrões LangGraph RAG Usados:
+
+- Avaliação de documentos antes da geração de respostas
+- Roteamento condicional entre diferentes métodos de busca
+- Validação multi-etapa e verificações de qualidade
+- Transições de estado com recuperação adequada de erros
+
+Se você quer aprender implementação LangGraph RAG, esta base de código fornece um exemplo funcional completo com padrões do mundo real.
 
 ---
 
-## File Types We Support
+## Tipos de Arquivos que Suportamos
 
-You can upload these types of files:
-- **Text Files**: `.txt`
-- **PDF Documents**: `.pdf` 
+Você pode fazer upload destes tipos de arquivos:
+
+- **Arquivos de Texto**: `.txt`
+- **Documentos PDF**: `.pdf`
 - **Microsoft Word**: `.docx`
-- **Excel Files**: `.csv`, `.xlsx`
+- **Arquivos Excel**: `.csv`, `.xlsx`
 
 ---
 
-## How It Works
+## Como Funciona
 
-The application works in a few simple steps, but there is complex processing happening behind the scenes:
+A aplicação funciona em alguns passos simples, mas há processamento complexo acontecendo nos bastidores:
 
-1. **When You Ask a Question**:
-   - You type your question in the text box
-   - The app checks if your question makes sense
-   - It searches through your uploaded documents to find relevant information
-   - Multiple checks happen to make sure the answer will be good
+1. **Quando Você Faz uma Pergunta**:
 
-2. **Getting Your Answer**:
-   - The application looks at what it found in your documents
-   - If there is relevant information, it writes an answer based on that
-   - It performs quality checks to ensure the answer is not fabricated
+   - Você digita sua pergunta na caixa de texto
+   - O app verifica se sua pergunta faz sentido
+   - Ele busca através dos seus documentos carregados para encontrar informações relevantes
+   - Múltiplas verificações acontecem para garantir que a resposta será boa
 
-3. **Ensuring Everything Works Properly**:
-   - The application has several checkpoints to catch problems
-   - It can identify when an answer might be incorrect or fabricated
-   - If one method does not work, it tries another approach
-   - You always know where your answer originated
+2. **Obtendo Sua Resposta**:
 
-4. **Evaluation and Transparency**:
-   - After generating an answer, the system provides detailed evaluation metrics
-   - Shows document relevance scores and which documents were most helpful
-   - Displays question-answer matching quality and completeness ratings
-   - Provides confidence levels and reasoning for each evaluation
-   - Indicates whether online search was used or if answers came from your documents
-   - All evaluation data is presented in easy-to-read tables for full transparency
+   - A aplicação olha o que encontrou nos seus documentos
+   - Se há informação relevante, ela escreve uma resposta baseada nisso
+   - Ela realiza verificações de qualidade para garantir que a resposta não é fabricada
 
-5. **Seeing What's Happening** (Optional):
-   - If you set up LangSmith, you can see exactly what the app is doing
-   - Great for understanding the process or fixing issues
-   - Shows you timing and performance info
+3. **Garantindo que Tudo Funciona Adequadamente**:
 
-### LangGraph RAG Architecture
+   - A aplicação tem vários pontos de verificação para capturar problemas
+   - Ela pode identificar quando uma resposta pode estar incorreta ou fabricada
+   - Se um método não funciona, ela tenta outra abordagem
+   - Você sempre sabe de onde sua resposta se originou
 
-The workflow uses LangGraph to manage the entire RAG pipeline:
+4. **Avaliação e Transparência**:
 
-- **State Management**: All data flows through a defined GraphState that tracks questions, documents, and evaluation results
-- **Conditional Routing**: The system decides whether to use document search or online search based on what it finds
-- **Error Recovery**: If document search fails, the workflow automatically tries online search
-- **Multi-Step Validation**: Each step includes quality checks before moving to the next stage
-- **Extensible Design**: Easy to add new evaluation steps or modify the workflow logic
+   - Após gerar uma resposta, o sistema fornece métricas de avaliação detalhadas
+   - Mostra pontuações de relevância de documentos e quais documentos foram mais úteis
+   - Exibe qualidade de correspondência pergunta-resposta e classificações de completude
+   - Fornece níveis de confiança e raciocínio para cada avaliação
+   - Indica se busca online foi usada ou se as respostas vieram dos seus documentos
+   - Todos os dados de avaliação são apresentados em tabelas fáceis de ler para total transparência
 
-This LangGraph RAG implementation provides a good foundation for building more complex document processing systems.
+5. **Vendo o que está Acontecendo** (Opcional):
+   - Se você configurar o LangSmith, pode ver exatamente o que o app está fazendo
+   - Ótimo para entender o processo ou corrigir problemas
+   - Mostra informações de tempo e performance
 
----
+### Arquitetura LangGraph RAG
 
-## What You'll Need
+O fluxo de trabalho usa LangGraph para gerenciar todo o pipeline RAG:
 
-Before you start, make sure you have these things:
+- **Gerenciamento de Estado**: Todos os dados fluem através de um GraphState definido que rastreia perguntas, documentos e resultados de avaliação
+- **Roteamento Condicional**: O sistema decide se deve usar busca de documentos ou busca online baseado no que encontra
+- **Recuperação de Erros**: Se a busca de documentos falha, o fluxo de trabalho automaticamente tenta busca online
+- **Validação Multi-Etapa**: Cada etapa inclui verificações de qualidade antes de passar para o próximo estágio
+- **Design Extensível**: Fácil de adicionar novas etapas de avaliação ou modificar a lógica do fluxo de trabalho
 
-- **Python 3.11 or newer** - [Get it here](https://www.python.org/downloads/)
-- **Git** - [Download here](https://git-scm.com/downloads) 
-- **OpenAI API Key** - You need this to make the LLM work
-- **LangSmith API Key** - Only if you want to see the workflow details (optional)
+Esta implementação LangGraph RAG fornece uma boa base para construir sistemas de processamento de documentos mais complexos.
 
 ---
 
-## Getting Started
+## O que Você Vai Precisar
 
-### Step 1: Download the Code
+Antes de começar, certifique-se de ter essas coisas:
+
+- **Python 3.11 ou mais novo** - [Baixe aqui](https://www.python.org/downloads/)
+- **Git** - [Baixe aqui](https://git-scm.com/downloads)
+- **Chave API OpenAI** - Você precisa disso para fazer o LLM funcionar
+- **Chave API LangSmith** - Apenas se você quiser ver os detalhes do fluxo de trabalho (opcional)
+
+---
+
+## Começando
+
+### Passo 1: Baixar o Código
 
 ```bash
 git clone https://github.com/juliohsu/geomimi.git
 cd geomimi
 ```
 
-### Step 2: Set Up a Virtual Environment
+### Passo 2: Configurar um Ambiente Virtual
 
-This keeps everything organized and will not interfere with your other Python projects.
+Isso mantém tudo organizado e não vai interferir com seus outros projetos Python.
 
-**If you are on Mac or Linux:**
+**Se você está no Mac ou Linux:**
+
 ```bash
 python3 -m venv geomimi
 source geomimi/bin/activate
 ```
 
-**If you are on Windows:**
+**Se você está no Windows:**
+
 ```bash
 python -m venv geomimi
 geomimi\Scripts\activate
 ```
 
-### Step 3: Install Everything You Need
+### Passo 3: Instalar Tudo que Você Precisa
 
-This installs all the required packages:
+Isso instala todos os pacotes necessários:
 
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Step 4: Add Your API Keys
+### Passo 4: Adicionar Suas Chaves API
 
-Create a file called `.env` in the main folder and add your API keys:
+Crie um arquivo chamado `.env` na pasta principal e adicione suas chaves API:
 
+````env
+OPENAI_API_KEY=your_openai_api_key_here
+LANGCHAIN_API_KEY=your_langsmith_api_key_here
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 LANGCHAIN_API_KEY=your_langsmith_api_key_here
 LANGCHAIN_TRACING_V2=true
 LANGCHAIN_PROJECT=Advanced-RAG-LangGraph
-```
+````
 
-### Step 5: Start the App
+### Passo 5: Iniciar o App
 
 ```bash
 streamlit run app.py
 ```
 
-Your browser will open automatically at `http://localhost:8501`
+Seu navegador vai abrir automaticamente em `http://localhost:8501`
 
 ---
 
-## Quick Start Guide
+## Guia de Início Rápido
 
-1. **Ask Away**: Type your question and hit "Ask"
-2. **Get Your Answer**: You will see the answer (If the question is not related to the pdf, it wont return user desire answers)
+1. **Pergunte à Vontade**: Digite sua pergunta e clique em "Perguntar"
+2. **Obtenha Sua Resposta**: Você verá a resposta (Se a pergunta não estiver relacionada ao pdf, não retornará as respostas desejadas pelo usuário)
 
-## How to Use It
+## Como Usar
 
-### The Basics
+### O Básico
 
-1. **Start the App**:
+1. **Iniciar o App**:
+
    ```bash
    streamlit run app.py
    ```
-   Then go to `http://localhost:8501` in your browser
 
-2. **Change the pdf and etc content**:
-   - Look for the 'local_data'
-   - Change you pdf or even others format files
+   Então vá para `http://localhost:8501` no seu navegador
 
-3. **Ask Questions**:
-   - Type your question in the text box
-   - Click "Ask" or just press Enter
-   - Check your answer
+2. **Mudar o pdf e outros conteúdos**:
+
+   - Procure pela pasta 'local_data'
+   - Mude seu pdf ou mesmo outros arquivos de formato
+
+3. **Fazer Perguntas**:
+   - Digite sua pergunta na caixa de texto
+   - Clique em "Perguntar" ou apenas pressione Enter
+   - Verifique sua resposta
 
 ---
 
-## License
+## Licença
 
-This project uses the MIT License - check out the [LICENSE](LICENSE) file for the details.
-
-
-
-
-
-
+Este projeto usa a Licença MIT - verifique o arquivo [LICENSE](LICENSE) para os detalhes.
